@@ -16,23 +16,24 @@ weight = np.random.rand(3)*(0.5)
 learnrate  = 1.0
 grad   = np.zeros(3)
 
-def sigmoid(summe): # Transferfunktion
-    return 1.0/(1.0+np.exp(-1.0*summe)) 
+def threshold(summe):
+    return (summe > 0).astype(int)
 
 def learn():
     global train, weight, out, target, learnrate
-    # Neuronenausgabe für alle 4 Trainingsmuster berechnen
-    out = sigmoid(np.matmul(train, weight))
-    # Gradienten berechnen
-    grad = np.matmul(train.T,(out-target)) * (out.T.dot(np.subtract(np.ones(4),out)))
-    weight -= learnrate*grad # Gewichte anpassen
+    # Ausgabe des Perzeptrons anhan der Trainingsdaten berechnen
+    out = threshold(np.matmul(train, weight))
+    # Fehler der Ausgabe mit dem Target errechnen
+    error = target - out
+    # Gewichte anhand der akkumulierten Fehler anpassen
+    weight += learnrate * np.matmul(error.T, train)
 
 def outp(N=100): # Daten für die Ausgabefunktion generieren
     global weight
     x = np.linspace(0, 1, N)
     y = np.linspace(0, 1, N)
     xx, yy = np.meshgrid(x, y)
-    oo = sigmoid(weight[0] + weight[1]*xx + weight[2]*yy)
+    oo = threshold(weight[0] + weight[1]*xx + weight[2]*yy)
     return xx, yy, oo
 
 def on_close(event): # Fenster schließen
