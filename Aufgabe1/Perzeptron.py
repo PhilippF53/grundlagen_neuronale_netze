@@ -23,11 +23,24 @@ def learn():
     global train, weight, out, target, learnrate
     # Ausgabe des Perzeptrons anhan der Trainingsdaten berechnen
     out = threshold(np.matmul(train, weight))
-    # Fehler der Ausgabe mit dem Target errechnen
-    error = target - out
-    # Gewichte anhand der akkumulierten Fehler anpassen
-    weight += learnrate * np.matmul(error.T, train)
 
+    # Perzeptron Lernregel iterativ
+    # for j in range(len(train)):
+    #     for i in range(len(weight)):
+    #         if train[j][i] == 1:
+    #             if out[j] == 0 and target[j] == 1:
+    #                 weight[i] += train[j][i]
+    #             if out[j] == 1 and target[j] == 0:
+    #                 weight[i] -= train[j][i]
+             
+    # Perzeptron Lernregel vektorisiert
+    increase = train * np.where((out[:, None] == 0) & (target[:, None] == 1), 1, 0)
+    decrease = train * np.where((out[:, None] == 1) & (target[:, None] == 0), 1, 0)
+
+    grad = (np.sum(increase, axis=0) - np.sum(decrease, axis=0))
+    
+    weight += learnrate * grad
+    
 def outp(N=100): # Daten für die Ausgabefunktion generieren
     global weight
     x = np.linspace(0, 1, N)
@@ -43,7 +56,7 @@ plt.ion()
 fig = plt.figure()
 fig.canvas.mpl_connect('close_event', on_close)
 while True:   # Endlosschleife
-    #for i in range(1000):
+# for i in range(1):
     learn()   # lerne einen Schritt
     plt.clf() # Bildschirm löschen
     X, Y, Z = outp() # generiere Plotdaten
