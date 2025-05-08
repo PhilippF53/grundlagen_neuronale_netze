@@ -29,7 +29,8 @@ def contrastive_divergence(visible_vector0, weights, visible_bias, hidden_bias, 
         hidden_vectork = encode(visible_vectork, weights, hidden_bias)
 
     weights += lr * (
-        np.dot(visible_vector0.T, hidden_vector0) - np.dot(visible_vectork.T, hidden_vectork)
+        np.dot(visible_vector0.T, hidden_vector0)
+        - np.dot(visible_vectork.T, hidden_vectork)
     )
     visible_bias += lr * np.sum(visible_vector0 - visible_vectork, axis=0)
     hidden_bias += lr * np.sum(hidden_vector0 - hidden_vectork, axis=0)
@@ -68,7 +69,6 @@ for epoch in range(epochs):
     h = encode(test_samples, weights, hidden_bias)
     rec = decode(h, weights, visible_bias)
 
-
     for i in range(10):
         axes[0, i].imshow(test_samples[i].reshape(28, 28), cmap="gray")
         axes[0, i].axis("off")
@@ -89,7 +89,9 @@ for epoch in range(epochs):
 
     for i in range(0, len(x_train), batch_size):
         batch = x_train[i : i + batch_size]
-        weights, visible_bias, hidden_bias = contrastive_divergence(batch, weights, visible_bias, hidden_bias, lr)
+        weights, visible_bias, hidden_bias = contrastive_divergence(
+            batch, weights, visible_bias, hidden_bias, lr
+        )
     np.random.shuffle(x_train)
 
 plt.ioff()

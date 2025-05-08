@@ -78,20 +78,20 @@ for i in range(1000):
     #         if grad_L2_old[i, j] * grad_L2[i, j] < 0:  # Lernrate verkleinern
     #             lr1[i, j] = max(lr1[i, j] * eta_minus, delta_min)
     #             grad_L2[i, j] = 0
-                
+
     # iRProp- Algorithmus -> vektorisiert Lernraten anpassen
-    
+
     L1_same_sign = grad_L1_old * grad_L1 > 0
     L2_same_sign = grad_L2_old * grad_L2 > 0
-    
+
     L1_sign_changed = grad_L1_old * grad_L1 < 0
     L2_sign_changed = grad_L2_old * grad_L2 < 0
-    
+
     l0 = np.where(L1_same_sign, np.minimum(lr0 * eta_plus, delta_max), lr0)
     l0 = np.where(L1_sign_changed, np.maximum(lr0 * eta_minus, delta_min), lr0)
     l1 = np.where(L2_same_sign, np.minimum(lr1 * eta_plus, delta_max), lr1)
     l1 = np.where(L2_sign_changed, np.maximum(lr1 * eta_minus, delta_min), lr1)
-    
+
     grad_L1 = np.where(L1_sign_changed, 0.0, grad_L1)
     grad_L2 = np.where(L2_sign_changed, 0.0, grad_L2)
 
