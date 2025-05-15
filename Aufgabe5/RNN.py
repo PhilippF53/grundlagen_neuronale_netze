@@ -4,30 +4,26 @@ import numpy as np
 
 matplotlib.use("TkAgg")
 
-# Initial state
-inputs = np.array([0.0, 0.0])
-bias_input = 1.0
+# transferfunction
+def tanh(inputs, weights, bias):
+    return 2 / (1 + np.exp(-2 * (np.dot(inputs, weights) + bias))) - 1
 
-# Weight matrix
+# parameters
+inputs = np.array([0.0, 0.0])
 weights = np.array(
     [
-        [-4.0, -1.5, -3.37],  # o1 = tanh(w11 * o1 + w12 * o2 + w_bias1)
-        [1.5, 0.0, 0.125],  # o2 = tanh(w21 * o1 + w22 * o2 + w_bias2)
+        [-4.0, 1.5],
+        [-1.5, 0.0],
     ]
 )
-
-
-def tanh_with_bias(inputs, weights):
-    extended_inputs = np.append(inputs, bias_input)
-    return (2 / (1 + np.exp(-2 * np.dot(weights, extended_inputs)))) - 1
-
-
-steps = 100
-output = np.zeros((steps, 2))
+bias = np.array([-3.37, 0.125])
+steps = 50
 inputs = np.array([0.0, 0.0])
+output = np.zeros((steps, 2))
 
+# generate outputs
 for step in range(steps):
-    output[step] = tanh_with_bias(inputs, weights)
+    output[step] = tanh(weights, inputs, bias)
     inputs = output[step]
 
 
