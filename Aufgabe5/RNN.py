@@ -5,8 +5,8 @@ import numpy as np
 matplotlib.use("TkAgg")
 
 # transferfunction
-def tanh(inputs, weights, bias):
-    return 2 / (1 + np.exp(-2 * (np.dot(inputs, weights) + bias))) - 1
+def tanh(x):
+    return 2 / (1 + np.exp(-2 * x)) - 1
 
 # parameters
 inputs = np.array([0.0, 0.0])
@@ -23,7 +23,7 @@ output = np.zeros((steps, 2))
 
 # generate outputs
 for step in range(steps):
-    output[step] = tanh(weights, inputs, bias)
+    output[step] = tanh(np.dot(weights, inputs) + bias)
     inputs = output[step]
 
 
